@@ -3,6 +3,7 @@ import math
 from Crypto.Util import number
 import random
 import statistics
+import hashlib
 
 
 
@@ -44,12 +45,13 @@ class CSSS_CountSketch():
     def add(self, item, weight):
         self.update(item, weight)
         
-    def update(self, item, weight=1):
+    def update(self, x, weight=1):
+        item = None
         try:
-            item = int(item)
+            item = int(x)
         except:
-            item = hash(item)
-        
+            item = int( hashlib.md5(str(hash(x.encode('utf-8'))).encode('utf-8')).hexdigest(), 16)
+
         self.total_input += weight
 
         for j in range(self.rows):
@@ -62,11 +64,12 @@ class CSSS_CountSketch():
                 #updated_weight<0
                 self.table_negative[j][hj] += abs(updated_weight)
 
-    def query(self, item):
+    def query(self, x):
+        item = None
         try:
-            item = int(item)
+            item = int(x)
         except:
-            item = hash(item)
+            item = int( hashlib.md5(str(hash(x.encode('utf-8'))).encode('utf-8')).hexdigest(), 16)
         ans = []
         for j in range(self.rows):
             hj = int( ( (self.a[j] * item + self.b[j]) % self.prime) % self.columns )

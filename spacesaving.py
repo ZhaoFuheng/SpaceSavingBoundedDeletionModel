@@ -139,3 +139,22 @@ class SpaceSaving():
     def output(self):
         print("weight_heap: ", self.weight_heap)
         print("map: ", self.item_to_indices)
+
+
+# maybe should try the linked list implementation.
+class DoubleSpaceSaving():
+    def __init__(self, eps, spacebudget):
+        insertSpace = (spacebudget + int(1/eps))//2
+        self.InsertSpacesaving = SpaceSaving(insertSpace)
+        self.DeleteSpacesaving = SpaceSaving(spacebudget - insertSpace)
+    def update(self, item, weight=1):
+        assert weight > 0
+        if int(item) > 0:
+            self.InsertSpacesaving.update(item, weight)
+        else:
+            self.DeleteSpacesaving.update(abs(int(item)), weight)
+    def query(self, item):
+        insertCount = self.InsertSpacesaving.query(item)
+        deleteCount = self.DeleteSpacesaving.query(item)
+        return max(0, insertCount - deleteCount)
+    

@@ -47,6 +47,9 @@ class CountMinSketch(object):
             self.tables.append(table)
         #print(self.tables)
 
+    def space(self):
+        # return number of counters
+        return self.m * self.d
     def _hash(self, x):
         md5 = hashlib.md5(str(hash(x)).encode('utf-8'))
         for i in range(self.d):

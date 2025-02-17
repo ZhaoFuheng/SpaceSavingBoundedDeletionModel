@@ -133,16 +133,12 @@ class UnbiasedDSS():
         insertSpace = (k + int(1/eps))//2
         self.insertUSS = UnbiasedSpaceSaving(insertSpace)
         self.deleteUSS = UnbiasedSpaceSaving(k - insertSpace)
-    def update(self, item, weight=1):
-        item = int(item)
-        if item > 0:
-            # indicate insertion
+    def update(self, item, weight=1, insert = True):
+        if insert:
             self.insertUSS.update(item, weight)
         else:
-            # indicate deletion
-            self.deleteUSS.update(abs(item), weight)
+            self.deleteUSS.update(item, weight)
     def query(self, item):
-        item = int(item)
         insertCount = self.insertUSS.query(item)
         deleteCount = self.deleteUSS.query(item)
         return max(0, insertCount - deleteCount)

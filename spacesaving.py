@@ -126,6 +126,17 @@ class SpaceSaving():
             index = self.item_to_indices[x]
             return self.weight_heap[index][1] - self.weight_heap[index][2]
         return 0
+    
+    def find(self,x):
+        if x in self.item_to_indices:
+            return True
+        return False
+
+    def getmin(self):
+        global_min = float('inf')
+        for _, insert, delete in self.weight_heap:
+            global_min = min(global_min, insert-delete)
+        return global_min 
 
     def __getitem__(self, x):
         """
@@ -147,12 +158,11 @@ class DoubleSpaceSaving():
         insertSpace = (spacebudget + int(1/eps))//2
         self.InsertSpacesaving = SpaceSaving(insertSpace)
         self.DeleteSpacesaving = SpaceSaving(spacebudget - insertSpace)
-    def update(self, item, weight=1):
-        assert weight > 0
-        if int(item) > 0:
+    def update(self, item, weight=1, insert=True):
+        if insert:
             self.InsertSpacesaving.update(item, weight)
         else:
-            self.DeleteSpacesaving.update(abs(int(item)), weight)
+            self.DeleteSpacesaving.update(item, weight)
     def query(self, item):
         insertCount = self.InsertSpacesaving.query(item)
         deleteCount = self.DeleteSpacesaving.query(item)
